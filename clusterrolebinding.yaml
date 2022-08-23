@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cert-renewal-agent-clusterrolebinding
+  namespace: cert-manager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cert-renewal-agent-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: cert-renewal-agent
+  namespace: cert-manager
