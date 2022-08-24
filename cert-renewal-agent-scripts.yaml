@@ -14,9 +14,12 @@ data:
     export SERVICEACCOUNT=/var/run/secrets/kubernetes.io/serviceaccount
     export TOKEN=$(cat ${SERVICEACCOUNT}/token)
     export CACERT=${SERVICEACCOUNT}/ca.crt
+    if [ -z "$RENEW_INTERVAL" ]; then
+      RENEW_INTERVAL="5m"
+    fi
 
     function request_apiserver() {
-      curl -v --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X ${1} "${APISERVER}${2}"
+      curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X ${1} "${APISERVER}${2}"
     }
     export -f request_apiserver
 
@@ -28,8 +31,9 @@ data:
     }
 
     while true; do
+      echo "Deleting pending certificate requests..."
       delete_failed_certificate_requests;
-      sleep 10s;
+      sleep $RENEW_INTERVAL;
     done;
 kind: ConfigMap
 metadata:

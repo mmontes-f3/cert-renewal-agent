@@ -21,6 +21,9 @@ spec:
       - name: cert-renewal-agent
         image: nicolaka/netshoot
         command: ["bash", "/opt/scripts/delete-failed-cert-requests.sh"]
+        env:
+          - name: RENEW_INTERVAL
+            value: 1m
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
